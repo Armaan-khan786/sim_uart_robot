@@ -12,7 +12,7 @@ jobs:
 
     defaults:
       run:
-        shell: cmd
+        shell: powershell
 
     steps:
 
@@ -50,17 +50,17 @@ jobs:
         run: |
           .\arduino-cli.exe upload -p COM7 --fqbn esp32:esp32:esp32 .\receiver
 
-      - name: ⏳ Wait for Boards
-        run: timeout /t 5
+      - name: ⏳ Wait for Boards to Reboot
+        run: Start-Sleep -Seconds 5
 
       - name: 🚀 Run Robot Tests
         run: |
-          robot uart_test.robot
+          robot --output output.xml --report report.html --log log.html uart_test.robot
 
-      - name: 📤 Upload Reports
+      - name: 📤 Upload Robot Reports
         uses: actions/upload-artifact@v4
         with:
-          name: UART-Report
+          name: UART-Test-Report
           path: |
             output.xml
             report.html
